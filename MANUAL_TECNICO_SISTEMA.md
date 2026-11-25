@@ -42,7 +42,7 @@
 | **3. Kill-Switch Hardware en Tiempo Real** | Retirar físicamente el DNIe bloquea/invalida la sesión de inmediato. | `WinSCardReaderProbe` emite `CARD_REMOVED`; `KillAgentClient` dispara `HardwareLockOverlay` (60s) y revoca la sesión en backend. |
 | **4. Sincronización de Contratos y ACL** | Los 6 Bounded Contexts de `Chaska` no comparten repositorios ni entidades internas. | Comunicación inter-contexto únicamente vía `*ContextFacade` (`interfaces.acl`) y `*ExternalService` (`outboundservices.acl`). |
 
-![Diagrama de Clases de Dominio ISO 23081 de Ch'asca](./assets/chasca-domain-class-diagram-iso23081.png)
+![Diagrama de Clases de Dominio ISO 23081 de Ch'asca](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/chasca-domain-class-diagram-iso23081.png)
 
 ---
 
@@ -1569,10 +1569,9 @@ A continuación se describe cada funcionalidad de negocio de **Ch'asca**, la sol
   4. Al ingresar el PIN correcto, `KILLAgent` firma el `nonce`, `chaska-webapp` envía el criptograma a `POST /api/v1/authentication/sign-in`, almacena el JWT únicamente en RAM (`tokenStore`) y navega a `/dashboard`.
   5. **Kill-Switch Activo:** Si el usuario retira el DNIe de la lectora durante la sesión, `AuthProvider` recibe `CARD_REMOVED` en `< 10 ms` y superpone `HardwareLockOverlay` con desenfoque total de pantalla y cuenta regresiva de `60` segundos. Al reinsertar el DNIe y revalidar el PIN (`/reauth-challenges` $\rightarrow$ `/reauth-verify`), la sesión continúa sin pérdida de contexto; de lo contrario, se revoca en backend y redirige a `/login`.
 
-![Pantalla de Login Zero Trust en 2 Fases con detección de lectora DNIe](./assets/ui_login_two_phase.png)
+![Pantalla de Login Zero Trust en 2 Fases con detección de lectora DNIe](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_login_two_phase.png)
 
-![Overlay de bloqueo por extracción física del DNIe (Kill-Switch 60s)](./assets/ui_hardware_lock_overlay.png)
-> *Captura opcional pendiente:* Si se requiere documentar el estado de bloqueo hardware en caliente, retirar el DNIe físico de la lectora durante una sesión activa para capturar `HardwareLockOverlay` y guardarlo como `documentacion/assets/ui_hardware_lock_overlay.png`.
+> *Captura opcional pendiente (`ui_hardware_lock_overlay.png`):* Si se requiere documentar el estado de bloqueo hardware en caliente (Kill-Switch 60s), retirar el DNIe físico de la lectora durante una sesión activa para capturar `HardwareLockOverlay` y guardarlo en `assets/ui_hardware_lock_overlay.png`.
 
 ---
 
@@ -1585,9 +1584,9 @@ A continuación se describe cada funcionalidad de negocio de **Ch'asca**, la sol
   2. El usuario puede filtrar documentos por estado (`DRAFT`, `IN_REVIEW`, `PENDING_SIGNATURE`, `SIGNED`), nivel de confidencialidad (`PUBLIC`, `INTERNAL`, `CONFIDENTIAL`, `RESTRICTED`), búsqueda global (`ShellProvider`) o vistas rápidas (`?vista=firmar`, `?vista=revisar`, `?vista=auditoria`).
   3. Desde `AppToolbar` o `AppSidebar`, puede abrir `AuthorizationPolicyModal` para auditar su propio `BusinessProfile`, sus niveles habilitados, qué niveles exigen Step-Up PIN y su alcance departamental.
 
-![Tablero principal de Ch'asca adaptado al rol y políticas ABAC del usuario](./assets/ui_dashboard.png)
+![Tablero principal de Ch'asca adaptado al rol y políticas ABAC del usuario](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_dashboard.png)
 
-![Modal de Políticas de Autorización ABAC y Alcance Departamental](./assets/ui_authorization_policy_modal.png)
+![Modal de Políticas de Autorización ABAC y Alcance Departamental](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_authorization_policy_modal.png)
 
 ---
 
@@ -1601,11 +1600,11 @@ A continuación se describe cada funcionalidad de negocio de **Ch'asca**, la sol
   3. Dentro de `/expedientes/:expedientId`, mientras el expediente esté `OPEN`, un usuario con `documents:create` abre `UploadDocumentModal` para cargar el PDF inicial (máximo `25 MB`), asociando metadatos ISO 23081 (`title`, `semanticSummary`, `legalMandate`, `businessActivity`, `confidentiality`).
   4. Revisores o firmantes pueden cerrar el expediente (`PATCH /api/v1/expedients/{expedientId}/close`), inmovilizándolo administrativamente.
 
-![Vista de Departamentos y Unidades Orgánicas Asignadas](./assets/ui_departments_view.png)
+![Vista de Departamentos y Unidades Orgánicas Asignadas](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_departments_view.png)
 
-![Detalle de Serie Documental con Metadatos ISO 15489](./assets/ui_series_detail.png)
+![Detalle de Serie Documental con Metadatos ISO 15489](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_series_detail.png)
 
-![Vista de detalle de expediente con listado de documentos y carga PDF](./assets/ui_expedient_detail.png)
+![Vista de detalle de expediente con listado de documentos y carga PDF](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_expedient_detail.png)
 
 ---
 
@@ -1626,7 +1625,7 @@ A continuación se describe cada funcionalidad de negocio de **Ch'asca**, la sol
      - Backend estampa el CMS PAdES-LTV con TSA RFC 3161 (`POST .../signatures`) y sella la nueva versión en MinIO WORM.
   6. Un revisor/firmante puede también rechazar un slot (`POST .../signature-slots/{slotId}/reject`) devolviendo el documento a `IN_REVIEW`, o un creador autorizado puede subir una nueva versión si el documento no está `SIGNED`.
 
-![Visor documental seguro con marca de agua, firma PAdES-LTV verificada y sello TSA](./assets/ui_document_viewer_pki.png)
+![Visor documental seguro con marca de agua, firma PAdES-LTV verificada y sello TSA](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_document_viewer_pki.png)
 
 ---
 
@@ -1641,15 +1640,15 @@ A continuación se describe cada funcionalidad de negocio de **Ch'asca**, la sol
   4. El nuevo colaborador abre `/registro/:token` (`OnboardingCompletionPage`), verifica sus datos precargados (`GET /onboarding-invitations/{token}`), define personalmente su `username` y `password` (`POST .../complete`) y queda habilitado para iniciar sesión en `/login` con su DNIe 3.0.
   5. Mediante `ManageCollaboratorModal`, operadores con `users:update` editan perfil y departamentos, mientras que solo `accounts:create | security:manage` modifican el `BusinessProfile` o activación/desactivación de la cuenta.
 
-![Pantalla de Gestión de Personal — Directorio de Trabajadores](./assets/ui_personnel_management.png)
+![Pantalla de Gestión de Personal — Directorio de Trabajadores](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_personnel_management.png)
 
-![Modal de Administración Integral de Trabajador (Perfil, Departamentos y Cuenta IAM)](./assets/ui_manage_collaborator_modal.png)
+![Modal de Administración Integral de Trabajador (Perfil, Departamentos y Cuenta IAM)](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_manage_collaborator_modal.png)
 
-![Formulario de Registro de Nuevo Trabajador e Invitación Temporal 12h](./assets/ui_create_worker.png)
+![Formulario de Registro de Nuevo Trabajador e Invitación Temporal 12h](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_create_worker.png)
 
-![Pantalla Pública de Activación de Cuenta (/registro/:token)](./assets/ui_onboarding_completion.png)
+![Pantalla Pública de Activación de Cuenta (/registro/:token)](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_onboarding_completion.png)
 
-![Catálogo Institucional de Cargos y Políticas ABAC](./assets/ui_profiles_catalog.png)
+![Catálogo Institucional de Cargos y Políticas ABAC](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/ui_profiles_catalog.png)
 
 ---
 
@@ -1700,9 +1699,9 @@ flowchart LR
     BE -->|"HTTP/HTTPS TSR"| TSA
 ```
 
-![Diagrama físico de despliegue Zero Trust](./assets/chasca-physical-deployment-zero-trust.png)
+![Diagrama físico de despliegue Zero Trust](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/chasca-physical-deployment-zero-trust.png)
 
-![Recursos en ejecución en Coolify (Chaska-environment / production)](./assets/coolify-production-resources.png)
+![Recursos en ejecución en Coolify (Chaska-environment / production)](https://raw.githubusercontent.com/KiwixArc/Documentation/main/assets/coolify-production-resources.png)
 
 ---
 
